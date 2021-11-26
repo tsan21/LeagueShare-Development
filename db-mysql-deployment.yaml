@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+    kompose.version: 1.24.0 (7c629530)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db-mysql
+  name: db-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: db-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+        kompose.version: 1.24.0 (7c629530)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: db-mysql
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: imgurdb
+            - name: MYSQL_PASSWORD
+              value: e63sAMGsedan
+            - name: MYSQL_ROOT_PASSWORD
+              value: e63sAMGsedan
+            - name: MYSQL_USER
+              value: mysql
+          image: mysql:latest
+          name: db-mysql
+          ports:
+            - containerPort: 3306
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+                - SYS_NICE
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: db-imgur
+      restartPolicy: Always
+      volumes:
+        - name: db-imgur
+          persistentVolumeClaim:
+            claimName: db-imgur
+status: {}
