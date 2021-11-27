@@ -28,15 +28,34 @@ items:
         kompose.version: 1.24.0 (7c629530)
       creationTimestamp: null
       labels:
-        io.kompose.service: db-mysql
-      name: db-mysql
+        io.kompose.service: db-mysql-imgur
+      name: db-mysql-imgur
     spec:
       ports:
         - name: "3306"
           port: 3306
           targetPort: 3306
       selector:
-        io.kompose.service: db-mysql
+        io.kompose.service: db-mysql-imgur
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert -f docker-compose.yml -o kubemanifest.yaml
+        kompose.version: 1.24.0 (7c629530)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: db-mysql-keycloak
+      name: db-mysql-keycloak
+    spec:
+      ports:
+        - name: "3307"
+          port: 3307
+          targetPort: 3306
+      selector:
+        io.kompose.service: db-mysql-keycloak
     status:
       loadBalancer: {}
   - apiVersion: v1
@@ -56,6 +75,25 @@ items:
           targetPort: 8091
       selector:
         io.kompose.service: imgur-service
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert -f docker-compose.yml -o kubemanifest.yaml
+        kompose.version: 1.24.0 (7c629530)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: keycloak
+      name: keycloak
+    spec:
+      ports:
+        - name: "8080"
+          port: 8080
+          targetPort: 8080
+      selector:
+        io.kompose.service: keycloak
     status:
       loadBalancer: {}
   - apiVersion: apps/v1
@@ -85,7 +123,7 @@ items:
         spec:
           containers:
             - image: api-gateway:latest
-              imagePullPolicy: Never 
+              imagePullPolicy: Never
               name: api-gateway
               ports:
                 - containerPort: 8081
@@ -100,13 +138,13 @@ items:
         kompose.version: 1.24.0 (7c629530)
       creationTimestamp: null
       labels:
-        io.kompose.service: db-mysql
-      name: db-mysql
+        io.kompose.service: db-mysql-imgur
+      name: db-mysql-imgur
     spec:
       replicas: 1
       selector:
         matchLabels:
-          io.kompose.service: db-mysql
+          io.kompose.service: db-mysql-imgur
       strategy:
         type: Recreate
       template:
@@ -116,7 +154,7 @@ items:
             kompose.version: 1.24.0 (7c629530)
           creationTimestamp: null
           labels:
-            io.kompose.service: db-mysql
+            io.kompose.service: db-mysql-imgur
         spec:
           containers:
             - env:
@@ -129,7 +167,7 @@ items:
                 - name: MYSQL_USER
                   value: mysql
               image: mysql:latest
-              name: db-mysql
+              name: db-mysql-imgur
               ports:
                 - containerPort: 3306
               resources: {}
@@ -168,6 +206,74 @@ items:
         kompose.version: 1.24.0 (7c629530)
       creationTimestamp: null
       labels:
+        io.kompose.service: db-mysql-keycloak
+      name: db-mysql-keycloak
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: db-mysql-keycloak
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert -f docker-compose.yml -o kubemanifest.yaml
+            kompose.version: 1.24.0 (7c629530)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: db-mysql-keycloak
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DATABASE
+                  value: keycloak
+                - name: MYSQL_PASSWORD
+                  value: e63sAMGsedan
+                - name: MYSQL_ROOT_PASSWORD
+                  value: e63sAMGsedan
+                - name: MYSQL_USER
+                  value: mysql
+              image: mysql:latest
+              name: db-mysql-keycloak
+              ports:
+                - containerPort: 3306
+              resources: {}
+              securityContext:
+                capabilities:
+                  add:
+                    - SYS_NICE
+              volumeMounts:
+                - mountPath: /var/lib/mysql
+                  name: db-keycloak
+          restartPolicy: Always
+          volumes:
+            - name: db-keycloak
+              persistentVolumeClaim:
+                claimName: db-keycloak
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: db-keycloak
+      name: db-keycloak
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert -f docker-compose.yml -o kubemanifest.yaml
+        kompose.version: 1.24.0 (7c629530)
+      creationTimestamp: null
+      labels:
         io.kompose.service: imgur-service
       name: imgur-service
     spec:
@@ -188,7 +294,7 @@ items:
         spec:
           containers:
             - image: imgur-service:latest
-              imagePullPolicy: Never 
+              imagePullPolicy: Never
               name: imgur-service
               ports:
                 - containerPort: 8091
@@ -215,6 +321,62 @@ items:
       resources:
         requests:
           storage: 100Mi
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert -f docker-compose.yml -o kubemanifest.yaml
+        kompose.version: 1.24.0 (7c629530)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: keycloak
+      name: keycloak
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: keycloak
+      strategy: {}
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert -f docker-compose.yml -o kubemanifest.yaml
+            kompose.version: 1.24.0 (7c629530)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: keycloak
+        spec:
+          containers:
+            - env:
+                - name: DB_ADDR
+                  value: db-mysql-keycloak
+                - name: DB_DATABASE
+                  value: keycloak
+                - name: DB_PASSWORD
+                  value: e63sAMGsedan
+                - name: DB_USER
+                  value: mysql
+                - name: DB_VENDOR
+                  value: MYSQL
+                - name: KEYCLOAK_PASSWORD
+                  value: admin
+                - name: KEYCLOAK_USER
+                  value: leagueshare
+                - name: PROXY_ADDRESS_FORWARDING
+                  value: "true"              
+                - name : KEYCLOAK_HTTP_PORT
+                  value : "80"
+                - name: KEYCLOAK_HTTPS_PORT
+                  value: "443"       
+                - name: DB_PORT
+                  value: "3307"                  
+              image: jboss/keycloak:latest
+              name: keycloak
+              ports:
+                - containerPort: 8080
+              resources: {}
+          restartPolicy: Always
     status: {}
 kind: List
 metadata: {}
