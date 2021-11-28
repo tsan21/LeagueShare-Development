@@ -39,7 +39,16 @@ spec:
               value: admin
             - name: KEYCLOAK_USER
               value: leagueshare
-          image: keycloak
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"              
+            - name : KEYCLOAK_HTTP_PORT
+              value : "80"
+            - name: KEYCLOAK_HTTPS_PORT
+              value: "443"       
+            - name: DB_PORT
+              value: "3307"                
+          image: keycloak-event-listener
+          imagePullPolicy: Never
           name: keycloak
           ports:
             - containerPort: 8080
