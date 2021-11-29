@@ -69,6 +69,7 @@ items:
         io.kompose.service: imgur-service
       name: imgur-service
     spec:
+      type: ClusterIP
       ports:
         - name: "8091"
           port: 8091
@@ -88,6 +89,7 @@ items:
         io.kompose.service: keycloak
       name: keycloak
     spec:
+      type: ClusterIP
       ports:
         - name: "8080"
           port: 8080

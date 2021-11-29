@@ -9,6 +9,7 @@ metadata:
     io.kompose.service: imgur-service
   name: imgur-service
 spec:
+  type: ClusterIP
   ports:
     - name: "8091"
       port: 8091
