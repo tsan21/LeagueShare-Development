@@ -2,17 +2,6 @@ version: '3.8'
 
 services:
 
-  api-gateway:
-    image: 'api-gateway:latest'
-    build:
-      context: "../LeagueShare-Api-Gateway/"
-      dockerfile: Dockerfile
-    container_name: api-gateway
-    depends_on:
-      - imgur-service
-    ports: 
-      - "8081:8081"   
-
   imgur-service:
     image: 'imgur-service:latest'
     depends_on:
@@ -42,7 +31,7 @@ services:
       DB_ADDR: db-mysql-keycloak
       DB_DATABASE: keycloak
       DB_USER: mysql
-      DB_PASSWORD: e63sAMGsedan
+      DB_PASSWORD: c63sAMGsedan
       KEYCLOAK_USER: leagueshare
       KEYCLOAK_PASSWORD: admin      
     ports:
@@ -71,8 +60,8 @@ services:
     environment:
       MYSQL_DATABASE: "keycloak"
       MYSQL_USER: "mysql"
-      MYSQL_PASSWORD: "e63sAMGsedan"
-      MYSQL_ROOT_PASSWORD: "e63sAMGsedan"
+      MYSQL_PASSWORD: "c63sAMGsedan"
+      MYSQL_ROOT_PASSWORD: "c63sAMGsedan"
     cap_add:
       - SYS_NICE
     ports:
