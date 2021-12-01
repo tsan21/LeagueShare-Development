@@ -9,7 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-    - host: leagueshare
+    - host: leagueshare.keycloak
       http:
         paths:
           - path: /
@@ -19,6 +19,7 @@ spec:
                 name: keycloak
                 port:
                   number: 8080
+########### below doesnt work with kubernetes-ingress                  
           # - path: /keycloak/test
           #   pathType: Prefix
           #   backend:
