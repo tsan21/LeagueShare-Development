@@ -2,40 +2,40 @@ version: '3.8'
 
 services:
 
-  # imgur-service:
-  #   image: 'imgur-service:latest'
-  #   depends_on:
-  #     - db-mysql-imgur
-  #   build:
-  #     context: "../LeagueShare-Imgur-Service/"
-  #     dockerfile: Dockerfile
-  #   container_name: imgur-service
-  #   volumes:
-  #     - type: volume
-  #       source: temporary-files
-  #       target: /src/main/TemporaryFiles/
-  #       volume:
-  #         nocopy: true                   
-  #   ports: 
-  #     - "8091:8091"
+  imgur-service:
+    image: 'imgur-service:latest'
+    depends_on:
+      - db-mysql-imgur
+    build:
+      context: "../LeagueShare-Imgur-Service/"
+      dockerfile: Dockerfile
+    container_name: imgur-service
+    volumes:
+      - type: volume
+        source: temporary-files
+        target: /src/main/TemporaryFiles/
+        volume:
+          nocopy: true                   
+    ports: 
+      - "8091:8091"
 
-  # keycloak:
-  #   build:
-  #     context: ../LeagueShare-Keycloak-Listener
-  #     dockerfile: Dockerfile
-  #   container_name: keycloak
-  #   depends_on:
-  #     - db-mysql-keycloak    
-  #   environment:
-  #     DB_VENDOR: MYSQL
-  #     DB_ADDR: db-mysql-keycloak
-  #     DB_DATABASE: keycloak
-  #     DB_USER: mysql
-  #     DB_PASSWORD: c63sAMGsedan
-  #     KEYCLOAK_USER: leagueshare
-  #     KEYCLOAK_PASSWORD: admin      
-  #   ports:
-  #     - 8080:8080
+  keycloak:
+    build:
+      context: ../LeagueShare-Keycloak-Listener
+      dockerfile: Dockerfile
+    container_name: keycloak
+    depends_on:
+      - db-mysql-keycloak    
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: db-mysql-keycloak
+      DB_DATABASE: keycloak
+      DB_USER: mysql
+      DB_PASSWORD: c63sAMGsedan
+      KEYCLOAK_USER: leagueshare
+      KEYCLOAK_PASSWORD: admin      
+    ports:
+      - 8080:8080
 
   user-service:
     image: 'user-service:latest'
@@ -48,37 +48,37 @@ services:
     ports: 
       - "8092:8092"      
 
-  # db-mysql-imgur:
-  #   container_name: db-mysql-imgur
-  #   image: mysql:latest
-  #   restart: always
-  #   environment:
-  #     MYSQL_DATABASE: "imgurdb"
-  #     MYSQL_USER: "mysql"
-  #     MYSQL_PASSWORD: "e63sAMGsedan"
-  #     MYSQL_ROOT_PASSWORD: "e63sAMGsedan"
-  #   cap_add:
-  #     - SYS_NICE
-  #   ports:
-  #     - "3306:3306"  
-  #   volumes:
-  #     - db-imgur:/var/lib/mysql
+  db-mysql-imgur:
+    container_name: db-mysql-imgur
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: "imgurdb"
+      MYSQL_USER: "mysql"
+      MYSQL_PASSWORD: "e63sAMGsedan"
+      MYSQL_ROOT_PASSWORD: "e63sAMGsedan"
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "3306:3306"  
+    volumes:
+      - db-imgur:/var/lib/mysql
 
-  # db-mysql-keycloak:
-  #   container_name: db-mysql-keycloak
-  #   image: mysql:latest
-  #   restart: always
-  #   environment:
-  #     MYSQL_DATABASE: "keycloak"
-  #     MYSQL_USER: "mysql"
-  #     MYSQL_PASSWORD: "c63sAMGsedan"
-  #     MYSQL_ROOT_PASSWORD: "c63sAMGsedan"
-  #   cap_add:
-  #     - SYS_NICE
-  #   ports:
-  #     - "3307:3306"  
-  #   volumes:
-  #     - db-keycloak:/var/lib/mysql
+  db-mysql-keycloak:
+    container_name: db-mysql-keycloak
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: "keycloak"
+      MYSQL_USER: "mysql"
+      MYSQL_PASSWORD: "c63sAMGsedan"
+      MYSQL_ROOT_PASSWORD: "c63sAMGsedan"
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "3307:3306"  
+    volumes:
+      - db-keycloak:/var/lib/mysql
 
   db-mysql-user:
     container_name: db-mysql-user
