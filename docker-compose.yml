@@ -38,16 +38,16 @@ services:
     ports:
       - 8080:8080
 
-  # user-service:
-  #   image: 'user-service:latest'
-  #   depends_on:
-  #     - db-mysql-user
-  #   build:
-  #     context: "../LeagueShare-User-Service/"
-  #     dockerfile: Dockerfile
-  #   container_name: user-service
-  #   ports: 
-  #     - "8092:8092"      
+  user-service:
+    image: 'user-service:latest'
+    depends_on:
+      - db-mysql-user
+    build:
+      context: "../LeagueShare-User-Service/"
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports: 
+      - "8092:8092"      
 
   # db-mysql-imgur:
   #   container_name: db-mysql-imgur
@@ -81,21 +81,21 @@ services:
     volumes:
       - db-keycloak:/var/lib/mysql
 
-  # db-mysql-user:
-  #   container_name: db-mysql-user
-  #   image: mysql:latest
-  #   restart: always
-  #   environment:
-  #     MYSQL_DATABASE: "userdb"
-  #     MYSQL_USER: "mysql"
-  #     MYSQL_PASSWORD: "gt63sAMGsedan"
-  #     MYSQL_ROOT_PASSWORD: "gt63sAMGsedan"
-  #   cap_add:
-  #     - SYS_NICE
-  #   ports:
-  #     - "3308:3306"  
-  #   volumes:
-  #     - db-user:/var/lib/mysql    
+  db-mysql-user:
+    container_name: db-mysql-user
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: "userdb"
+      MYSQL_USER: "mysql"
+      MYSQL_PASSWORD: "gt63sAMGsedan"
+      MYSQL_ROOT_PASSWORD: "gt63sAMGsedan"
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "3308:3306"  
+    volumes:
+      - db-user:/var/lib/mysql    
 
   rmq:
     image: rabbitmq:3.8-management
