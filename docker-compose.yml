@@ -2,22 +2,22 @@ version: '3.8'
 
 services:
 
-  imgur-service:
-    image: 'imgur-service:latest'
-    depends_on:
-      - db-mysql-imgur
-    build:
-      context: "../LeagueShare-Imgur-Service/"
-      dockerfile: Dockerfile
-    container_name: imgur-service
-    volumes:
-      - type: volume
-        source: temporary-files
-        target: /src/main/TemporaryFiles/
-        volume:
-          nocopy: true                   
-    ports: 
-      - "8091:8091"
+  # imgur-service:
+    # image: 'imgur-service:latest'
+    # depends_on:
+    #   - db-mysql-imgur
+    # build:
+    #   context: "../LeagueShare-Imgur-Service/"
+    #   dockerfile: Dockerfile
+    # container_name: imgur-service
+    # volumes:
+    #   - type: volume
+    #     source: temporary-files
+    #     target: /src/main/TemporaryFiles/
+    #     volume:
+    #       nocopy: true                   
+    # ports: 
+    #   - "8091:8091"
 
   keycloak:
     build:
@@ -26,6 +26,7 @@ services:
     container_name: keycloak
     depends_on:
       - db-mysql-keycloak    
+      - rmq
     environment:
       DB_VENDOR: MYSQL
       DB_ADDR: db-mysql-keycloak
@@ -48,21 +49,21 @@ services:
     ports: 
       - "8092:8092"      
 
-  db-mysql-imgur:
-    container_name: db-mysql-imgur
-    image: mysql:latest
-    restart: always
-    environment:
-      MYSQL_DATABASE: "imgurdb"
-      MYSQL_USER: "mysql"
-      MYSQL_PASSWORD: "e63sAMGsedan"
-      MYSQL_ROOT_PASSWORD: "e63sAMGsedan"
-    cap_add:
-      - SYS_NICE
-    ports:
-      - "3306:3306"  
-    volumes:
-      - db-imgur:/var/lib/mysql
+  # db-mysql-imgur:
+  #   container_name: db-mysql-imgur
+  #   image: mysql:latest
+  #   restart: always
+  #   environment:
+  #     MYSQL_DATABASE: "imgurdb"
+  #     MYSQL_USER: "mysql"
+  #     MYSQL_PASSWORD: "e63sAMGsedan"
+  #     MYSQL_ROOT_PASSWORD: "e63sAMGsedan"
+  #   cap_add:
+  #     - SYS_NICE
+  #   ports:
+  #     - "3306:3306"  
+  #   volumes:
+  #     - db-imgur:/var/lib/mysql
 
   db-mysql-keycloak:
     container_name: db-mysql-keycloak
@@ -94,7 +95,15 @@ services:
     ports:
       - "3308:3306"  
     volumes:
-      - db-user:/var/lib/mysql      
+      - db-user:/var/lib/mysql    
+
+  rmq:
+    image: rabbitmq:3.8-management
+    container_name: rmq
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"        
 
 volumes:
   temporary-files:
