@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: user-service
+  name: user-service
+  namespace: leagueshare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - image: ghcr.io/tsan21/leagueshare-user-service:main
+          imagePullPolicy: Always
+          name: user-service
+          ports:
+            - containerPort: 8092
+          resources: {}
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: user-service
+  name: user-service
+  namespace: leagueshare
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8092
+      targetPort: 8092
+  selector:
+    app: user-service
