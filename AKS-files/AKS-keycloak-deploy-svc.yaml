@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: leagueshare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - env:
+            - name: DB_ADDR
+              value: db-mysql-keycloak
+            - name: DB_DATABASE
+              value: keycloak
+            - name: DB_PASSWORD
+              value: e63sAMGsedan
+            - name: DB_USER
+              value: mysql
+            - name: DB_VENDOR
+              value: MYSQL
+            - name: KEYCLOAK_PASSWORD
+              value: admin
+            - name: KEYCLOAK_USER
+              value: leagueshare
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"              
+            - name : KEYCLOAK_HTTP_PORT
+              value : "80"
+            - name: KEYCLOAK_HTTPS_PORT
+              value: "443"       
+            - name: DB_PORT
+              value: "3307"                         
+          image: ghcr.io/tsan21/leagueshare-keycloak-listener:main
+          imagePullPolicy: Always
+          name: keycloak
+          ports:
+            - containerPort: 8080
+          resources: {}
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: leagueshare
+  labels:
+    app: keycloak
+    service: keycloak
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: keycloak

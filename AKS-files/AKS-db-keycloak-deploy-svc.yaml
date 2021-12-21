@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-mysql-keycloak
+  namespace: leagueshare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-mysql-keycloak
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db-mysql-keycloak
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: keycloak
+            - name: MYSQL_PASSWORD
+              value: e63sAMGsedan
+            - name: MYSQL_ROOT_PASSWORD
+              value: e63sAMGsedan
+            - name: MYSQL_USER
+              value: mysql
+          image: mysql:latest
+          name: db-mysql-keycloak
+          ports:
+            - containerPort: 3306
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+                - SYS_NICE
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: db-keycloak
+      restartPolicy: Always
+      volumes:
+        - name: db-keycloak
+          persistentVolumeClaim:
+            claimName: db-keycloak
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: db-mysql-keycloak
+  name: db-mysql-keycloak
+  namespace: leagueshare
+spec:
+  ports:
+    - name: "3307"
+      port: 3307
+      targetPort: 3306
+  selector:
+    app: db-mysql-keycloak

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: db-mysql-user
+  name: db-mysql-user
+  namespace: leagueshare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-mysql-user
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db-mysql-user
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: userdb
+            - name: MYSQL_PASSWORD
+              value: gt63sAMGsedan
+            - name: MYSQL_ROOT_PASSWORD
+              value: gt63sAMGsedan
+            - name: MYSQL_USER
+              value: mysql
+          image: mysql:latest
+          name: db-mysql-user
+          ports:
+            - containerPort: 3306
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+                - SYS_NICE
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: db-user
+      restartPolicy: Always
+      volumes:
+        - name: db-user
+          persistentVolumeClaim:
+            claimName: db-user
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: db-mysql-user
+  name: db-mysql-user
+  namespace: leagueshare
+spec:
+  ports:
+    - name: "3308"
+      port: 3308
+      targetPort: 3306
+  selector:
+    app: db-mysql-user
