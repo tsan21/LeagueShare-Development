@@ -37,7 +37,9 @@ spec:
             - name: KEYCLOAK_HTTPS_PORT
               value: "443"       
             - name: DB_PORT
-              value: "3307"                         
+              value: "3307"   
+            - name: KEYCLOAK_FRONTEND_URL
+              value: "http://20.50.178.64:8080/auth"
           image: ghcr.io/tsan21/leagueshare-keycloak-listener:main
           imagePullPolicy: Always
           name: keycloak
