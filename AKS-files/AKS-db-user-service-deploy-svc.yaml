@@ -35,7 +35,7 @@ spec:
           securityContext:
             capabilities:
               add:
-                - SYS_NICE
+                - SYS_NICE            
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: db-user
@@ -54,8 +54,9 @@ metadata:
   name: db-mysql-user
   namespace: leagueshare
 spec:
+  type: LoadBalancer
   ports:
-    - name: "3308"
+    - protocol: TCP
       port: 3308
       targetPort: 3306
   selector:

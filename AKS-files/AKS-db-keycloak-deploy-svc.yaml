@@ -52,8 +52,9 @@ metadata:
   name: db-mysql-keycloak
   namespace: leagueshare
 spec:
+  type: LoadBalancer
   ports:
-    - name: "3307"
+    - protocol: TCP
       port: 3307
       targetPort: 3306
   selector:
