@@ -39,7 +39,9 @@ spec:
             - name: DB_PORT
               value: "3307"   
             - name: KEYCLOAK_FRONTEND_URL
-              value: "http://51.144.62.28:80/auth"          
+              value: "http://51.144.62.28:80/auth" 
+            - name: KEYCLOAK_LOGLEVEL
+              value: "DEBUG"
           image: ghcr.io/tsan21/leagueshare-keycloak-listener:main
           imagePullPolicy: Always
           name: keycloak
@@ -61,7 +63,7 @@ spec:
   type: ClusterIP
   ports:
     - protocol: TCP
-      port: 8080
+      port: 80
       targetPort: 8080
   selector:
     app: keycloak

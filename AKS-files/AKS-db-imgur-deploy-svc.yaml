@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: db-mysql-imgur
+  name: db-mysql-imgur
+  namespace: leagueshare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-mysql-imgur
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db-mysql-imgur
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: imgurdb
+            - name: MYSQL_PASSWORD
+              value: e63sAMGsedan
+            - name: MYSQL_ROOT_PASSWORD
+              value: e63sAMGsedan
+            - name: MYSQL_USER
+              value: mysql
+          image: mysql:latest
+          name: db-mysql-imgur
+          ports:
+            - containerPort: 3306
+          resources: {}         
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: db-imgur
+      restartPolicy: Always
+      volumes:
+        - name: db-imgur
+          persistentVolumeClaim:
+            claimName: db-imgur
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: db-mysql-imgur
+  name: db-mysql-imgur
+  namespace: leagueshare
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: db-mysql-imgur
