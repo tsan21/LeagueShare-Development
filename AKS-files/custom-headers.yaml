@@ -5,5 +5,4 @@ data:
 kind: ConfigMap
 metadata:
   name: custom-headers
-  namespace: leagueshare
-  
+  namespace: ingress-nginx

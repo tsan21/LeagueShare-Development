@@ -38,8 +38,8 @@ spec:
               value: "443"       
             - name: DB_PORT
               value: "3307"   
-            - name: KEYCLOAK_FRONTEND_URL
-              value: "http://20.93.199.249:80/auth" 
+            # - name: KEYCLOAK_FRONTEND_URL
+            #   value: "http://20.50.163.116/auth" 
             - name: KEYCLOAK_LOGLEVEL
               value: "DEBUG"
           image: ghcr.io/tsan21/leagueshare-keycloak-listener:main
@@ -63,7 +63,7 @@ spec:
   type: ClusterIP
   ports:
     - protocol: TCP
-      port: 443
+      port: 80
       targetPort: 8080
   selector:
     app: keycloak

@@ -34,10 +34,10 @@ metadata:
   name: user-service
   namespace: leagueshare
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - protocol: TCP
-      port: 8092
+      port: 80
       targetPort: 8092
   selector:
     app: user-service

@@ -1,23 +1,34 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-rules
+  name: ingress-rules-keycloak
   namespace: leagueshare
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    kubernetes.io/tls-acme: "true"
     # nginx.ingress.kubernetes.io/use-regex: "true"
-    # nginx.ingress.kubernetes.io/rewrite-target: /$1
-    # nginx.ingress.kubernetes.io/configuration-snippet: |
-    #   more_set_headers "X-Forwarded-For: $proxy_add_x_forwarded_for";
-    #   more_set_headers "X-Forwarded-Proto: $scheme";
-    #   more_set_headers "X-Real-IP: $remote_addr";
-      
-    #   proxy_set_header X-Forwarded-Proto $scheme;
-    #   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    #   proxy_set_header X-Real-IP $remote_addr;
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: keycloak
+            port:
+              number: 8080
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-rules-imgur
+  namespace: leagueshare
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
   - http:
@@ -26,13 +37,27 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: keycloak
+            name: imgur-service
             port:
-              number: 8080
-      # - path: /
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: imgur-service
-      #       port:
-      #         number: 8091  
+              number: 8091  
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-rules-user
+  namespace: leagueshare
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /user
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service
+            port:
+              number: 8092  
