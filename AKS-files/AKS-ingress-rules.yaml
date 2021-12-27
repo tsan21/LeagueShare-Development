@@ -33,7 +33,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /
+      - path: /keycloak
         pathType: Prefix
         backend:
           service:
@@ -54,7 +54,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /user
+      - path: /
         pathType: Prefix
         backend:
           service:
