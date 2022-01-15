@@ -6,10 +6,6 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/force_no_ssl_redirect: "true"
-    # nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    # nginx.ingress.kubernetes.io/use-regex: "true"
-    # nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
   - http:
@@ -31,12 +27,11 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/force_no_ssl_redirect: "true"
 spec:
   rules:
   - http:
       paths:
-      - path: /keycloak
+      - path: /imgur
         pathType: Prefix
         backend:
           service:
@@ -53,13 +48,11 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/force_no_ssl_redirect: "true"
-    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
   - http:
       paths:
-      - path: /(.*)
+      - path: /
         pathType: Prefix
         backend:
           service:

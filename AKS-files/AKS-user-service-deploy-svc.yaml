@@ -37,7 +37,7 @@ spec:
   type: ClusterIP
   ports:
     - protocol: TCP
-      port: 80
+      port: 8092  
       targetPort: 8092
   selector:
     app: user-service
